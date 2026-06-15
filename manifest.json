@@ -1,0 +1,23 @@
+{
+  "manifest_version": 3,
+  "name": "Master Control",
+  "version": "4.0",
+  "description": "System Monitor Professional - IP, Alarmas, Plantillas y Proxies",
+  "permissions": ["storage", "alarms", "notifications", "proxy"],
+  "host_permissions": [
+    "https://api.ipify.org/",
+    "http://ip-api.com/*"
+  ],
+  "action": {
+    "default_popup": "popup.html",
+    "default_title": "Master Control",
+    "default_icon": {
+      "16": "icono.png",
+      "48": "icono.png",
+      "128": "icono.png"
+    }
+  },
+  "background": {
+    "service_worker": "background.js"
+  }
+}

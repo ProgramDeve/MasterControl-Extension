@@ -1,0 +1,600 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      width: 450px;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: linear-gradient(135deg, #0a0a0a 0%, #1a1a2e 100%);
+      color: #e2e8f0;
+      margin: 0;
+    }
+
+    .container {
+      padding: 15px;
+    }
+
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 15px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid rgba(255, 193, 7, 0.3);
+    }
+    .header h1 { 
+      font-size: 16px; 
+      font-weight: 700; 
+      background: linear-gradient(135deg, #FFD700, #FFA500);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .header-right {
+      display: flex;
+      gap: 8px;
+    }
+    .pin-btn, .quick-off-btn {
+      background: #2a2a3e;
+      border: none;
+      color: #FFD700;
+      font-size: 14px;
+      cursor: pointer;
+      padding: 5px 10px;
+      border-radius: 6px;
+    }
+    .quick-off-btn {
+      background: #dc2626;
+      color: white;
+    }
+    .pin-btn:hover { background: #FFD700; color: #0a0a0a; }
+    .quick-off-btn:hover { background: #ef4444; }
+    
+    .clock-card {
+      background: linear-gradient(135deg, #1a1a2e, #0a0a0a);
+      border-radius: 10px;
+      padding: 12px;
+      text-align: center;
+      margin-bottom: 12px;
+      border: 1px solid rgba(255, 193, 7, 0.3);
+    }
+    .time { 
+      font-size: 28px; 
+      font-weight: 700; 
+      font-family: monospace; 
+      background: linear-gradient(135deg, #FFD700, #FFA500);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .date { font-size: 10px; color: #94a3b8; margin-top: 4px; }
+    
+    .card {
+      background: #1a1a2e;
+      border-radius: 10px;
+      padding: 12px;
+      margin-bottom: 12px;
+      border: 1px solid rgba(255, 193, 7, 0.2);
+    }
+    .card-title { 
+      font-size: 11px; 
+      font-weight: 700; 
+      color: #FFD700; 
+      margin-bottom: 10px; 
+      text-transform: uppercase; 
+      display: flex; 
+      align-items: center; 
+      gap: 8px; 
+    }
+    
+    /* Alarmas */
+    .alarm-input-group { display: flex; gap: 8px; margin-bottom: 12px; }
+    .alarm-input-group input {
+      flex: 1;
+      background: #0f0f1a;
+      border: 1px solid #2a2a3e;
+      color: #fff;
+      padding: 8px;
+      border-radius: 6px;
+      font-size: 12px;
+    }
+    .alarm-input-group input:focus {
+      outline: none;
+      border-color: #FFD700;
+    }
+    .btn-primary {
+      background: linear-gradient(135deg, #FFD700, #FFA500);
+      color: #0a0a0a;
+      border: none;
+      padding: 8px 15px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 12px;
+      font-weight: 700;
+    }
+    .btn-primary:hover { 
+      background: linear-gradient(135deg, #FFE44D, #FFB347);
+      transform: translateY(-1px);
+    }
+    
+    .alarm-list { max-height: 150px; overflow-y: auto; }
+    .alarm-item {
+      background: #0f0f1a;
+      padding: 8px;
+      margin-bottom: 6px;
+      border-radius: 6px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-left: 3px solid #FFD700;
+    }
+    .alarm-info { flex: 1; }
+    .alarm-time { font-size: 12px; font-weight: 600; color: #FFD700; }
+    .alarm-msg { font-size: 11px; color: #94a3b8; }
+    .delete-btn {
+      background: #dc2626;
+      color: white;
+      border: none;
+      padding: 4px 10px;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 11px;
+    }
+    .delete-btn:hover { background: #ef4444; }
+    
+    /* IP */
+    .ip-container {
+      text-align: center;
+      padding: 15px;
+      background: linear-gradient(135deg, #0f0f1a, #1a1a2e);
+      border-radius: 12px;
+      margin-bottom: 12px;
+      border: 1px solid rgba(255, 193, 7, 0.3);
+    }
+    .ip-label {
+      font-size: 10px;
+      color: #94a3b8;
+      letter-spacing: 1px;
+      margin-bottom: 8px;
+    }
+    .ip-value {
+      font-size: 24px;
+      font-weight: 700;
+      font-family: monospace;
+      color: #FFD700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+    }
+    .flag-icon { font-size: 28px; }
+    .ip-location { font-size: 11px; color: #94a3b8; margin-top: 8px; }
+    
+    /* Buscador IP */
+    .search-input-group {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 8px;
+    }
+    .search-input-group input {
+      flex: 1;
+      background: #0f0f1a;
+      border: 1px solid #2a2a3e;
+      color: #fff;
+      padding: 8px;
+      border-radius: 6px;
+      font-size: 12px;
+    }
+    .search-input-group input:focus {
+      outline: none;
+      border-color: #FFD700;
+    }
+    .search-result {
+      background: #0f0f1a;
+      border-radius: 8px;
+      padding: 10px;
+      margin-top: 8px;
+      display: none;
+      font-size: 11px;
+    }
+    .search-result.show { display: block; }
+    .search-result-item {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 5px;
+      padding: 3px 0;
+      border-bottom: 1px solid #2a2a3e;
+    }
+    .search-result-label { color: #94a3b8; }
+    .search-result-value { font-weight: 600; color: #FFD700; }
+    
+    /* Bloc de notas */
+    .notes-input-group {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 12px;
+    }
+    .notes-input-group input {
+      flex: 1;
+      background: #0f0f1a;
+      border: 1px solid #2a2a3e;
+      color: #fff;
+      padding: 8px;
+      border-radius: 6px;
+      font-size: 12px;
+    }
+    .notes-input-group input:focus {
+      outline: none;
+      border-color: #FFD700;
+    }
+    .notes-list { max-height: 120px; overflow-y: auto; }
+    .note-item {
+      background: #0f0f1a;
+      padding: 8px;
+      margin-bottom: 6px;
+      border-radius: 6px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-left: 3px solid #FFD700;
+    }
+    .note-text {
+      flex: 1;
+      font-size: 11px;
+      cursor: pointer;
+      padding: 4px;
+      border-radius: 4px;
+    }
+    .note-text:hover { background: rgba(255, 215, 0, 0.1); }
+    .btn-copy {
+      background: #10b981;
+      color: white;
+      border: none;
+      padding: 4px 8px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 10px;
+    }
+    .btn-delete-note {
+      background: #dc2626;
+      color: white;
+      border: none;
+      padding: 4px 8px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 10px;
+    }
+    
+    /* Proxy Activo */
+    .proxy-row { margin-bottom: 8px; }
+    .proxy-row input, .proxy-row select {
+      width: 100%;
+      background: #0f0f1a;
+      border: 1px solid #2a2a3e;
+      color: #fff;
+      padding: 7px;
+      border-radius: 6px;
+      font-size: 11px;
+    }
+    .proxy-row input:focus, .proxy-row select:focus {
+      outline: none;
+      border-color: #FFD700;
+    }
+    .proxy-buttons { display: flex; gap: 8px; margin-top: 10px; }
+    .btn-secondary {
+      background: #2a2a3e;
+      color: #e2e8f0;
+      border: 1px solid #3a3a50;
+      padding: 7px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 11px;
+      flex: 1;
+    }
+    .btn-secondary:hover { background: #3a3a50; border-color: #FFD700; }
+    .badge {
+      display: inline-block;
+      padding: 2px 8px;
+      background: #2a2a3e;
+      border-radius: 10px;
+      font-size: 9px;
+      margin-left: 8px;
+      color: #FFD700;
+    }
+    
+    /* Gestor de Proxies Guardados */
+    .saved-proxy-form {
+      background: #0f0f1a;
+      padding: 12px;
+      border-radius: 8px;
+      margin-bottom: 12px;
+    }
+    .form-group {
+      margin-bottom: 8px;
+    }
+    .form-group label {
+      display: block;
+      font-size: 10px;
+      color: #94a3b8;
+      margin-bottom: 3px;
+    }
+    .form-group input, .form-group select {
+      width: 100%;
+      background: #1a1a2e;
+      border: 1px solid #2a2a3e;
+      color: #fff;
+      padding: 7px 10px;
+      border-radius: 6px;
+      font-size: 11px;
+    }
+    .form-group input:focus, .form-group select:focus {
+      outline: none;
+      border-color: #FFD700;
+    }
+    .form-row-2 {
+      display: flex;
+      gap: 8px;
+    }
+    .form-row-2 .form-group {
+      flex: 1;
+    }
+    .btn-full {
+      width: 100%;
+      margin-top: 5px;
+    }
+    .btn-danger {
+      background: #dc2626;
+      margin-bottom: 12px;
+      color: white;
+    }
+    .btn-danger:hover {
+      background: #ef4444;
+      color: white;
+    }
+    
+    /* Lista de proxies guardados */
+    .saved-proxies-list {
+      max-height: 250px;
+      overflow-y: auto;
+    }
+    .saved-proxy-item {
+      background: #0f0f1a;
+      padding: 10px;
+      margin-bottom: 8px;
+      border-radius: 8px;
+      border-left: 3px solid #10b981;
+    }
+    .saved-proxy-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 6px;
+    }
+    .saved-proxy-name {
+      font-weight: 700;
+      color: #FFD700;
+      font-size: 12px;
+    }
+    .saved-proxy-country {
+      font-size: 10px;
+      padding: 2px 6px;
+      background: #2a2a3e;
+      border-radius: 10px;
+    }
+    .saved-proxy-details {
+      font-size: 10px;
+      color: #94a3b8;
+      margin-bottom: 8px;
+      font-family: monospace;
+    }
+    .saved-proxy-actions {
+      display: flex;
+      gap: 6px;
+    }
+    .btn-use-proxy {
+      background: #3b82f6;
+      color: white;
+      border: none;
+      padding: 4px 8px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 10px;
+    }
+    .btn-test-proxy {
+      background: #f59e0b;
+      color: white;
+      border: none;
+      padding: 4px 8px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 10px;
+    }
+    .btn-delete-proxy {
+      background: #dc2626;
+      color: white;
+      border: none;
+      padding: 4px 8px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 10px;
+    }
+    
+    .status {
+      margin-top: 10px;
+      padding: 8px;
+      border-radius: 6px;
+      font-size: 10px;
+      text-align: center;
+    }
+    .status.success { background: #064e3b; color: #6ee7b7; border: 1px solid #10b981; }
+    .status.error { background: #7f1d1d; color: #fecaca; border: 1px solid #ef4444; }
+    
+    /* Scrolls */
+    .notes-list::-webkit-scrollbar, .alarm-list::-webkit-scrollbar, .saved-proxies-list::-webkit-scrollbar {
+      width: 4px;
+    }
+    .notes-list::-webkit-scrollbar-track, .alarm-list::-webkit-scrollbar-track, .saved-proxies-list::-webkit-scrollbar-track {
+      background: #0f0f1a;
+    }
+    .notes-list::-webkit-scrollbar-thumb, .alarm-list::-webkit-scrollbar-thumb, .saved-proxies-list::-webkit-scrollbar-thumb {
+      background: #FFD700;
+      border-radius: 4px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>🎛️ MASTER CONTROL</h1>
+      <div class="header-right">
+        <button class="quick-off-btn" id="quickDisableProxyBtn" title="Desactivar proxy">❌ Off</button>
+        <button class="pin-btn" id="pinBtn">📌</button>
+      </div>
+    </div>
+    
+    <!-- RELOJ -->
+    <div class="clock-card">
+      <div class="time" id="clock">--:--:--</div>
+      <div class="date" id="date">---</div>
+    </div>
+    
+    <!-- ALARMAS -->
+    <div class="card">
+      <div class="card-title">⏰ ALARMAS</div>
+      <div class="alarm-input-group">
+        <input type="time" id="alarmTime" step="1">
+        <input type="text" id="alarmMsg" placeholder="Mensaje">
+        <button class="btn-primary" id="addAlarmBtn">+</button>
+      </div>
+      <div id="alarmsContainer" class="alarm-list"></div>
+    </div>
+    
+    <!-- IP -->
+    <div class="ip-container">
+      <div class="ip-label">🌐 TU IP REAL</div>
+      <div class="ip-value">
+        <span id="myIp">Cargando...</span>
+        <span class="flag-icon" id="myFlag">🏳️</span>
+      </div>
+      <div class="ip-location" id="myLocation">Obteniendo ubicación...</div>
+    </div>
+    
+    <!-- BUSCAR IP -->
+    <div class="card">
+      <div class="card-title">🔍 BUSCAR IP</div>
+      <div class="search-input-group">
+        <input type="text" id="searchIpInput" placeholder="Ej: 8.8.8.8">
+        <button class="btn-primary" id="searchIpBtn">Buscar</button>
+      </div>
+      <div id="searchResult" class="search-result">
+        <div class="search-result-item"><span class="search-result-label">🌐 IP:</span><span class="search-result-value" id="resultIp">-</span></div>
+        <div class="search-result-item"><span class="search-result-label">🏁 País:</span><span class="search-result-value" id="resultCountry">-</span></div>
+        <div class="search-result-item"><span class="search-result-label">📍 Ciudad:</span><span class="search-result-value" id="resultCity">-</span></div>
+        <div class="search-result-item"><span class="search-result-label">🏢 Proveedor:</span><span class="search-result-value" id="resultIsp">-</span></div>
+      </div>
+    </div>
+    
+    <!-- PLANTILLAS -->
+    <div class="card">
+      <div class="card-title">📋 PLANTILLAS</div>
+      <div class="notes-input-group">
+        <input type="text" id="noteInput" placeholder="Escribe una plantilla...">
+        <button class="btn-primary" id="addNoteBtn">+</button>
+      </div>
+      <div id="notesContainer" class="notes-list"></div>
+    </div>
+    
+    <!-- PROXY ACTIVO -->
+    <div class="card">
+      <div class="card-title">🔐 PROXY ACTIVO <span class="badge" id="proxyStatus">OFF</span></div>
+      <div class="proxy-row">
+        <select id="proxyType">
+          <option value="none">Sin Proxy</option>
+          <option value="http">HTTP</option>
+          <option value="https">HTTPS</option>
+          <option value="socks4">SOCKS4</option>
+          <option value="socks5">SOCKS5</option>
+        </select>
+      </div>
+      <div class="proxy-row"><input type="text" id="proxyHost" placeholder="Servidor"></div>
+      <div class="proxy-row"><input type="text" id="proxyPort" placeholder="Puerto"></div>
+      <div class="proxy-row"><input type="text" id="proxyBypass" placeholder="Bypass (localhost,127.0.0.1)"></div>
+      <div class="proxy-buttons">
+        <button class="btn-primary" id="applyProxyBtn">Aplicar</button>
+        <button class="btn-secondary" id="testProxyBtn">Probar</button>
+        <button class="btn-secondary" id="disableProxyBtn">Off</button>
+      </div>
+    </div>
+    
+    <!-- MIS PROXIES GUARDADOS -->
+    <div class="card">
+      <div class="card-title">📚 MIS PROXIES</div>
+      
+      <!-- Formulario para agregar proxy -->
+      <div class="saved-proxy-form">
+        <div class="form-group">
+          <label>📝 Nombre del proxy</label>
+          <input type="text" id="savedProxyName" placeholder="Ej: Proxy Perú Rápido">
+        </div>
+        
+        <div class="form-group">
+          <label>🏁 País / Ubicación</label>
+          <select id="savedProxyCountry">
+            <option value="🇵🇪 Perú">🇵🇪 Perú</option>
+            <option value="🇺🇸 Estados Unidos">🇺🇸 Estados Unidos</option>
+            <option value="🇪🇸 España">🇪🇸 España</option>
+            <option value="🇦🇷 Argentina">🇦🇷 Argentina</option>
+            <option value="🇨🇱 Chile">🇨🇱 Chile</option>
+            <option value="🇨🇴 Colombia">🇨🇴 Colombia</option>
+            <option value="🇲🇽 México">🇲🇽 México</option>
+            <option value="🇧🇷 Brasil">🇧🇷 Brasil</option>
+            <option value="🇪🇨 Ecuador">🇪🇨 Ecuador</option>
+            <option value="🇧🇴 Bolivia">🇧🇴 Bolivia</option>
+            <option value="🇺🇾 Uruguay">🇺🇾 Uruguay</option>
+            <option value="🇵🇾 Paraguay">🇵🇾 Paraguay</option>
+            <option value="🇻🇪 Venezuela">🇻🇪 Venezuela</option>
+            <option value="🌍 Otro">🌍 Otro</option>
+          </select>
+        </div>
+        
+        <div class="form-group">
+          <label>🔧 Tipo de proxy</label>
+          <select id="savedProxyType">
+            <option value="http">HTTP</option>
+            <option value="https">HTTPS</option>
+            <option value="socks4">SOCKS4</option>
+            <option value="socks5">SOCKS5</option>
+          </select>
+        </div>
+        
+        <div class="form-row-2">
+          <div class="form-group">
+            <label>📡 Host / IP</label>
+            <input type="text" id="savedProxyHost" placeholder="192.168.1.1">
+          </div>
+          <div class="form-group">
+            <label>🔌 Puerto</label>
+            <input type="text" id="savedProxyPort" placeholder="8080">
+          </div>
+        </div>
+        
+        <button class="btn-primary btn-full" id="addSavedProxyBtn">➕ Guardar Proxy</button>
+      </div>
+      
+      <!-- Botón para desactivar proxy desde la sección de proxies -->
+      <button class="btn-secondary btn-full btn-danger" id="disableProxyFromListBtn">❌ DESACTIVAR PROXY</button>
+      
+      <!-- Lista de proxies guardados -->
+      <div id="savedProxiesContainer" class="saved-proxies-list"></div>
+    </div>
+    
+    <div id="statusMsg" class="status" style="display:none;"></div>
+  </div>
+  <script src="popup.js"></script>
+</body>
+</html>
